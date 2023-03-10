@@ -37,6 +37,15 @@ jobs:
       - attach_workspace:
           at: .
       - run: yarn test:coverage --ci --runInBand
+      - run:
+          name: Coverage Parse
+          command: |
+            sudo apt-get update && sudo apt-get install -y jq --no-install-recommends
+            STMT=$(cat ./coverage/coverage-summary.json | jq '.total.statements.pct')
+            BRANCH=$(cat ./coverage/coverage-summary.json | jq '.total.branches.pct')
+            FUNCS=$(cat ./coverage/coverage-summary.json | jq '.total.functions.pct')
+            LINES=$(cat ./coverage/coverage-summary.json | jq '.total.lines.pct')
+            echo $STMT $BRANCH $FUNCS $LINES
       - store_artifacts:
           path: ~/ci-coverage-notification/coverage
           destination: coverage
