@@ -79,9 +79,9 @@ jobs:
               echo '=========================================================='
               echo '         | Stmts | Branch | Funcs | Lines | '
               echo '=========================================================='
-              echo  main    | $MAIN_STMT | $MAIN_BRANCH | $MAIN_FUNCS | $MAIN_LINES
+              echo " main    | $MAIN_STMT | $MAIN_BRANCH | $MAIN_FUNCS | $MAIN_LINES "
               echo '=========================================================='
-              echo  current | $CUR_STMT | $CUR_BRANCH | $CUR_FUNCS | $CUR_LINES
+              echo " current | $CUR_STMT | $CUR_BRANCH | $CUR_FUNCS | $CUR_LINES "
               echo '=========================================================='
             fi
       - store_artifacts:
