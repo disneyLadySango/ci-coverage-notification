@@ -45,14 +45,14 @@ jobs:
           command: |
             BRANCH_NAME=$(echo ${CIRCLE_BRANCH} | sed -e "s/\//_/")
             echo $BRANCH_NAME
-            mv ./coverage/coverage-summary.json ./coverage/coverage-summary-$BRANCH_NAME.json 
+            mv ./coverage ./coverage-$BRANCH_NAME
       # mainのCoverageを復旧する
       - restore_cache:
           key: coverage-main
       # 保存はするがmainのみを使うので実質使ってない
       - save_cache:
           paths:
-            - coverage/coverage-summary-{{ .Branch }}.json
+            - coverage-{{ .Branch }}
           key: coverage-{{ .Branch }}
       - run:
           name: Coverage Parse
@@ -63,12 +63,11 @@ jobs:
               sudo apt-get update && sudo apt-get install -y jq --no-install-recommends
               BRANCH_NAME=$(echo ${CIRCLE_BRANCH} | sed -e "s/\//_/")
               echo _____________________ $BRANCH_NAME
-              CURRENT_JSON=$(cat ./coverage/coverage-summary-$BRANCH_NAME.json)
+              CURRENT_JSON=$(cat ./coverage-$BRANCH_NAME/coverage-summary.json)
               echo _____________________ $CURRENT_JSON
-              cat ./coverage/coverage-summary-main.json
+              cat ./coverage-main/coverage-summary-main.json
               echo ================
               ls -la ./coverage
-
               CUR_STMT=$(echo $CURRENT_JSON | jq '.total.statements.pct')
               CUR_BRANCH=$(echo $CURRENT_JSON | jq '.total.branches.pct')
               CUR_FUNCS=$(echo $CURRENT_JSON | jq '.total.functions.pct')
