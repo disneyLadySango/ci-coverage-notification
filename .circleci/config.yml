@@ -46,13 +46,13 @@ jobs:
             if [ ${CIRCLE_BRANCH} == "main" ]; then
               mv ./coverage ./coverage-main
             fi
+      # mainのCoverageを復旧する
+      - restore_cache:
+          key: coverage-main
       # 保存はするがmainのみを使うので実質使ってない
       - save_cache:
           paths:
             - ~/ci-coverage-notification/coverage-main
-          key: coverage-{{ .Branch }}
-      # mainのCoverageを復旧する
-      - restore_cache:
           key: coverage-main
       - run:
           name: Coverage Parse
