@@ -48,7 +48,9 @@ jobs:
             fi
       # mainのCoverageを復旧する
       - restore_cache:
-          key: coverage-main
+          keys: 
+            - coverage-main
+            - coverage
       # 保存はするがmainのみを使うので実質使ってない
       - save_cache:
           paths:
