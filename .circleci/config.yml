@@ -66,10 +66,10 @@ jobs:
               echo _____________________ $BRANCH_NAME
               CURRENT_JSON=$(cat ./coverage/coverage-summary-$BRANCH_NAME.json)
               echo _____________________ $CURRENT_JSON
-              STMT=$($CURRENT_JSON | jq '.total.statements.pct')
-              BRANCH=$($CURRENT_JSON | jq '.total.branches.pct')
-              FUNCS=$($CURRENT_JSON | jq '.total.functions.pct')
-              LINES=$($CURRENT_JSON | jq '.total.lines.pct')
+              STMT=$(echo $CURRENT_JSON | jq '.total.statements.pct')
+              BRANCH=$(echo $CURRENT_JSON | jq '.total.branches.pct')
+              FUNCS=$(echo $CURRENT_JSON | jq '.total.functions.pct')
+              LINES=$(echo $CURRENT_JSON | jq '.total.lines.pct')
               echo $STMT $BRANCH $FUNCS $LINES
             fi
       - store_artifacts:
