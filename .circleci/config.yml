@@ -43,7 +43,9 @@ jobs:
       - run:
           name: Rename Coverage Summary
           command: |
-            mv ./coverage/coverage-summary.json ./coverage/coverage-summary-${CIRCLE_BRANCH}.json 
+            BRANCH_NAME=$(echo ${CIRCLE_BRANCH} | sed -e "s/\//_/")
+            mv ./coverage/coverage-summary.json ./coverage/coverage-summary-$BRANCH_NAME.json 
+      # 保存はするがmainのみを使うので実質使ってない
       - save_cache:
           paths:
             - coverage/coverage-summary-{{ .Branch }}.json
