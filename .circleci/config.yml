@@ -43,7 +43,7 @@ jobs:
       - run:
           name: Rename Coverage Summary
           command: |
-            mv ./coverage/coverage-summary.json ./coverage/coverage-summary-{{ .Branch }}.json 
+            mv ./coverage/coverage-summary.json ./coverage/coverage-summary-${CIRCLE_BRANCH}.json 
       - save_cache:
           paths:
             - coverage/coverage-summary-{{ .Branch }}.json
@@ -59,7 +59,7 @@ jobs:
               echo NO REPORT MAIN
             else
               sudo apt-get update && sudo apt-get install -y jq --no-install-recommends
-              CURRENT_JSON=$(cat ./coverage/coverage-summary.json)
+              CURRENT_JSON=$(cat ./coverage/coverage-summary-${CIRCLE_BRANCH}.json)
               STMT=$($CURRENT_JSON | jq '.total.statements.pct')
               BRANCH=$($CURRENT_JSON | jq '.total.branches.pct')
               FUNCS=$($CURRENT_JSON | jq '.total.functions.pct')
