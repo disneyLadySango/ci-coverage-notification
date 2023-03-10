@@ -39,6 +39,7 @@ jobs:
       # mainのCoverageを復旧する
       - restore_cache:
           keys: 
+            - coverage-base-
             - coverage-base
       - run: 
           name: Run Test
@@ -54,7 +55,7 @@ jobs:
       - save_cache:
           paths:
             - ~/ci-coverage-notification/coverage-base
-          key: coverage-base
+          key: coverage-base-{{ checksum "./coverage-base/coverage-summary.json" }}
       - run:
           name: Coverage Parse
           command: |
