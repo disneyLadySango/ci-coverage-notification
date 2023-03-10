@@ -66,7 +66,9 @@ jobs:
               echo _____________________ $BRANCH_NAME
               CURRENT_JSON=$(cat ./coverage/coverage-summary-$BRANCH_NAME.json)
               echo _____________________ $CURRENT_JSON
-              cat ./coverage
+              cat ./coverage/coverage-summary-main.json
+              echo ================
+
               CUR_STMT=$(echo $CURRENT_JSON | jq '.total.statements.pct')
               CUR_BRANCH=$(echo $CURRENT_JSON | jq '.total.branches.pct')
               CUR_FUNCS=$(echo $CURRENT_JSON | jq '.total.functions.pct')
