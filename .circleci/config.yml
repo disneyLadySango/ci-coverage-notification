@@ -1,0 +1,51 @@
+version: 2.1
+
+executors:
+  default:
+    docker:
+      - image: circleci/node:16.11.1
+    working_directory: ~/ci-coverage-notification
+    environment:
+      - BASH_ENV: /home/circleci/.bashrc
+
+
+jobs:
+  initialization:
+    executor:
+      name: default
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - node_modules-{{ checksum "yarn.lock" }}
+            - node_modules-
+      - run: yarn --frozen-lockfile
+      - save_cache:
+          paths:
+            - node_modules
+          key: node_modules-{{ checksum "yarn.lock" }}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  test:
+    working_directory: ~/ci-coverage-notification
+    executor:
+      name: default
+    steps:
+      - attach_workspace:
+          at: .
+      - run: yarn test:coverage --ci --runInBand
+      - store_artifacts:
+          path: ~/ci-coverage-notification/coverage
+          destination: coverage
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - initialization
+      - test:
+          requires:
+            - initialization
