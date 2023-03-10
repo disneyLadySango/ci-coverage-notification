@@ -64,29 +64,30 @@ jobs:
             else
               sudo apt-get update && sudo apt-get install -y jq --no-install-recommends
               BRANCH_NAME=$(echo ${CIRCLE_BRANCH} | sed -e "s/\//_/")
-              echo _____________________ $BRANCH_NAME
               CURRENT_JSON=$(cat ./coverage/coverage-summary.json)
-              echo _____________________ $CURRENT_JSON
-              cat ./coverage-base/coverage-summary.json
-              echo ================
               CUR_STMT=$(echo $CURRENT_JSON | jq '.total.statements.pct')
               CUR_BRANCH=$(echo $CURRENT_JSON | jq '.total.branches.pct')
               CUR_FUNCS=$(echo $CURRENT_JSON | jq '.total.functions.pct')
               CUR_LINES=$(echo $CURRENT_JSON | jq '.total.lines.pct')
-              echo $CUR_STMT $CUR_BRANCH $CUR_FUNCS $CUR_LINES
-              MAIN_JSON=$(cat ./coverage-main/coverage-summary.json)
+
+              MAIN_JSON=$(cat ./coverage-base/coverage-summary.json)
               MAIN_STMT=$(echo $MAIN_JSON | jq '.total.statements.pct')
               MAIN_BRANCH=$(echo $MAIN_JSON | jq '.total.branches.pct')
               MAIN_FUNCS=$(echo $MAIN_JSON | jq '.total.functions.pct')
               MAIN_LINES=$(echo $MAIN_JSON | jq '.total.lines.pct')
-              echo $MAIN_STMT $MAIN_BRANCH $MAIN_FUNCS $MAIN_LINES
+
+              echo '=========================================================='
+              echo '         | Stmts | Branch | Funcs | Lines | '
+              echo '=========================================================='
+              echo " main    | $MAIN_STMT | $MAIN_BRANCH | $MAIN_FUNCS | $MAIN_LINES "
+              echo '=========================================================='
+              echo " current | $CUR_STMT | $CUR_BRANCH | $CUR_FUNCS | $CUR_LINES "
+              echo '=========================================================='
             fi
       - store_artifacts:
           path: ~/ci-coverage-notification/coverage
           destination: coverage
-      - store_artifacts:
-          path: ~/ci-coverage-notification/coverage-base
-          destination: coverage-base
+
 workflows:
   version: 2
   workflow:
