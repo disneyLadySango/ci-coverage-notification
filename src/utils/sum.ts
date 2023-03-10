@@ -3,5 +3,5 @@ export const sum = (a: number, b: number): number => {
 };
 
 export const sums = (...args: number[]): number => {
-  return args.reduce((prev, current) => prev + current, 1);
+  return args.reduce((prev, current) => prev + current, 0);
 };
