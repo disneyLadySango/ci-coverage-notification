@@ -81,7 +81,7 @@ jobs:
               echo $MAIN_STMT $MAIN_BRANCH $MAIN_FUNCS $MAIN_LINES
             fi
       - store_artifacts:
-          path: ~/ci-coverage-notification/coverage/{{ .Branch }}
+          path: ~/ci-coverage-notification/coverage
           destination: coverage
 
 workflows:
