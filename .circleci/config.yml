@@ -37,6 +37,10 @@ jobs:
       - attach_workspace:
           at: .
       - run: yarn test:coverage --ci --runInBand
+      - save_cache:
+          paths:
+            - coverage/coverage-summary.json
+          key: coverage-{{ .Branch }}
       - run:
           name: Coverage Parse
           command: |
