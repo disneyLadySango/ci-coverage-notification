@@ -53,8 +53,7 @@ jobs:
           key: coverage-{{ .Branch }}
       # mainのCoverageを復旧する
       - restore_cache:
-          keys:
-            - coverage-main
+          key: coverage-main
       - run:
           name: Coverage Parse
           command: |
