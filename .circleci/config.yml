@@ -36,7 +36,48 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-      - run: yarn test:coverage --ci --runInBand
+      - run: 
+          name: Run Test
+          command: |
+            yarn test:coverage --ci --runInBand
+      - run:
+          name: Rename Coverage Summary
+          command: |
+            BRANCH_NAME=$(echo ${CIRCLE_BRANCH} | sed -e "s/\//_/")
+            echo $BRANCH_NAME
+            mv ./coverage/coverage-summary.json ./coverage/coverage-summary-$BRANCH_NAME.json 
+      # 保存はするがmainのみを使うので実質使ってない
+      - save_cache:
+          paths:
+            - coverage/coverage-summary-{{ .Branch }}.json
+          key: coverage-{{ .Branch }}
+      # mainのCoverageを復旧する
+      - restore_cache:
+          keys:
+            - coverage-main
+      - run:
+          name: Coverage Parse
+          command: |
+            if [ ${CIRCLE_BRANCH} == "main" ]; then
+              echo NO REPORT MAIN
+            else
+              sudo apt-get update && sudo apt-get install -y jq --no-install-recommends
+              BRANCH_NAME=$(echo ${CIRCLE_BRANCH} | sed -e "s/\//_/")
+              echo _____________________ $BRANCH_NAME
+              CURRENT_JSON=$(cat ./coverage/coverage-summary-$BRANCH_NAME.json)
+              echo _____________________ $CURRENT_JSON
+              CUR_STMT=$(echo $CURRENT_JSON | jq '.total.statements.pct')
+              CUR_BRANCH=$(echo $CURRENT_JSON | jq '.total.branches.pct')
+              CUR_FUNCS=$(echo $CURRENT_JSON | jq '.total.functions.pct')
+              CUR_LINES=$(echo $CURRENT_JSON | jq '.total.lines.pct')
+              echo $CUR_STMT $CUR_BRANCH $CUR_FUNCS $CUR_LINES
+              MAIN_JSON=$(cat ./coverage/coverage-summary-main.json)
+              MAIN_STMT=$(echo $MAIN_JSON | jq '.total.statements.pct')
+              MAIN_BRANCH=$(echo $MAIN_JSON | jq '.total.branches.pct')
+              MAIN_FUNCS=$(echo $MAIN_JSON | jq '.total.functions.pct')
+              MAIN_LINES=$(echo $MAIN_JSON | jq '.total.lines.pct')
+              echo $MAIN_STMT $MAIN_BRANCH $MAIN_FUNCS $MAIN_LINES
+            fi
       - store_artifacts:
           path: ~/ci-coverage-notification/coverage
           destination: coverage
