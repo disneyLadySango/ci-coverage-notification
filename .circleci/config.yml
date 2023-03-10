@@ -46,14 +46,14 @@ jobs:
             BRANCH_NAME=$(echo ${CIRCLE_BRANCH} | sed -e "s/\//_/")
             echo $BRANCH_NAME
             mv ./coverage/coverage-summary.json ./coverage/coverage-summary-$BRANCH_NAME.json 
+      # mainのCoverageを復旧する
+      - restore_cache:
+          key: coverage-main
       # 保存はするがmainのみを使うので実質使ってない
       - save_cache:
           paths:
             - coverage/coverage-summary-{{ .Branch }}.json
           key: coverage-{{ .Branch }}
-      # mainのCoverageを復旧する
-      - restore_cache:
-          key: coverage-main
       - run:
           name: Coverage Parse
           command: |
@@ -67,6 +67,7 @@ jobs:
               echo _____________________ $CURRENT_JSON
               cat ./coverage/coverage-summary-main.json
               echo ================
+              ls -la ./coverage
 
               CUR_STMT=$(echo $CURRENT_JSON | jq '.total.statements.pct')
               CUR_BRANCH=$(echo $CURRENT_JSON | jq '.total.branches.pct')
