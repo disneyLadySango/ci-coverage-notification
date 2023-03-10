@@ -65,7 +65,7 @@ jobs:
               echo _____________________ $BRANCH_NAME
               CURRENT_JSON=$(cat ./coverage/${CIRCLE_BRANCH}/coverage-summary.json)
               echo _____________________ $CURRENT_JSON
-              cat ./coverage-main/coverage-summary-main.json
+              cat ./coverage/main/coverage-summary-main.json
               echo ================
               ls -la ./coverage
               CUR_STMT=$(echo $CURRENT_JSON | jq '.total.statements.pct')
