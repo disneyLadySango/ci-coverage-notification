@@ -36,6 +36,11 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      # mainのCoverageを復旧する
+      - restore_cache:
+          keys: 
+            - coverage-main
+            - coverage
       - run: 
           name: Run Test
           command: |
@@ -46,11 +51,6 @@ jobs:
             if [ ${CIRCLE_BRANCH} == "main" ]; then
               mv ./coverage ./coverage-main
             fi
-      # mainのCoverageを復旧する
-      - restore_cache:
-          keys: 
-            - coverage-main
-            - coverage
       # 保存はするがmainのみを使うので実質使ってない
       - save_cache:
           paths:
