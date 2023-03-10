@@ -36,6 +36,11 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      # mainのCoverageを復旧する
+      - restore_cache:
+          keys: 
+            - coverage-base-
+            - coverage-base
       - run: 
           name: Run Test
           command: |
@@ -44,16 +49,13 @@ jobs:
           name: Rename Coverage Directory By Main Branch
           command: |
             if [ ${CIRCLE_BRANCH} == "main" ]; then
-              mv ./coverage ./coverage-main
+              mv ./coverage ./coverage-base
             fi
       # 保存はするがmainのみを使うので実質使ってない
       - save_cache:
           paths:
-            - ~/ci-coverage-notification/coverage-main
-          key: coverage-{{ .Branch }}
-      # mainのCoverageを復旧する
-      - restore_cache:
-          key: coverage-main
+            - ~/ci-coverage-notification/coverage-base
+          key: coverage-base-{{ checksum "./coverage-base/coverage-summary.json" }}
       - run:
           name: Coverage Parse
           command: |
@@ -65,7 +67,7 @@ jobs:
               echo _____________________ $BRANCH_NAME
               CURRENT_JSON=$(cat ./coverage/coverage-summary.json)
               echo _____________________ $CURRENT_JSON
-              cat ./coverage-main/coverage-summary.json
+              cat ./coverage-base/coverage-summary.json
               echo ================
               CUR_STMT=$(echo $CURRENT_JSON | jq '.total.statements.pct')
               CUR_BRANCH=$(echo $CURRENT_JSON | jq '.total.branches.pct')
@@ -83,8 +85,8 @@ jobs:
           path: ~/ci-coverage-notification/coverage
           destination: coverage
       - store_artifacts:
-          path: ~/ci-coverage-notification/coverage-main
-          destination: coverage-main
+          path: ~/ci-coverage-notification/coverage-base
+          destination: coverage-base
 workflows:
   version: 2
   workflow:
