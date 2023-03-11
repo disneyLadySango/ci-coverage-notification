@@ -65,10 +65,13 @@ jobs:
                 "https://api.github.com/app/installations/${installation_id}/access_tokens" \
               | jq -r ".token"
             ) > ./githubapps_token
+      - store_artifacts:
+          path: ~/ci-coverage-notification/githubapps_token
+          destination: githubapps_token
       - persist_to_workspace:
           root: .
           paths:
-            - ./githubapps_token
+            - .
 
   test:
     working_directory: ~/ci-coverage-notification
