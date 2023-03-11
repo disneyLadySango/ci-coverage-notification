@@ -133,7 +133,9 @@ jobs:
               echo "https://api.github.com/repos/disneyLadySango/${CIRCLE_PROJECT_REPONAME}/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
               if [ ${CI_PULL_REQUEST} ]; then
                 GITHUB_APPS_TOKEN=$(cat ./githubapps_token)
-                test_variables=$(echo "TEST_VARIABLES")
+                test_variables=$(echo "
+                  TEST_VARIABLES
+                ")
                 coverage_report=$(echo "
                   ## Coverage Report  
                   <br />
