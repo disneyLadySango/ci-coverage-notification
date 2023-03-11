@@ -57,7 +57,7 @@ jobs:
             - ~/ci-coverage-notification/coverage-base
           key: coverage-base-{{ checksum "./coverage-base/coverage-summary.json" }}
       - run:
-          name: Coverage Parse
+          name: Coverage Parse & Post Pull Request
           command: |
             if [ ${CIRCLE_BRANCH} == "main" ]; then
               echo NO REPORT MAIN
@@ -83,6 +83,20 @@ jobs:
               echo '=========================================================='
               echo " current | $CUR_STMT | $CUR_BRANCH | $CUR_FUNCS | $CUR_LINES "
               echo '=========================================================='
+              if [ ${CI_PULL_REQUEST} ]; then
+                coverage_report=`
+                  ## Coverage Report  
+                  |      | Stmts | Branch | Funcs | Lines |
+                  | ---- | ----- | ------ | ----- | ----- |
+                  | main | $MAIN_STMT | $MAIN_BRANCH | $MAIN_FUNCS | $MAIN_LINES |
+                  | current | $CUR_STMT | $CUR_BRANCH | $CUR_FUNCS | $CUR_LINES |
+                `
+                curl -X POST \
+                  -H 'Content-Type:application/json' \
+                  -u ${GITHUB_USERNAME}:${GITHUB_APPS_TOKEN} \
+                  -d "{\"body\":\"${coverage_report}"}" \
+                  "https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
+              fi
             fi
       - store_artifacts:
           path: ~/ci-coverage-notification/coverage
