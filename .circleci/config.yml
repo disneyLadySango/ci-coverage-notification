@@ -84,13 +84,7 @@ jobs:
               echo " current | $CUR_STMT | $CUR_BRANCH | $CUR_FUNCS | $CUR_LINES "
               echo '=========================================================='
               if [ ${CI_PULL_REQUEST} ]; then
-                coverage_report=echo "
-                  ## Coverage Report  
-                  |      | Stmts | Branch | Funcs | Lines |
-                  | ---- | ----- | ------ | ----- | ----- |
-                  | main | $MAIN_STMT | $MAIN_BRANCH | $MAIN_FUNCS | $MAIN_LINES |
-                  | current | $CUR_STMT | $CUR_BRANCH | $CUR_FUNCS | $CUR_LINES |
-                "
+                coverage_report=echo "Hello World"
                 curl -X POST \
                   -H 'Content-Type:application/json' \
                   -u ${GITHUB_USERNAME}:${GITHUB_APPS_TOKEN} \
