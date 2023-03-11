@@ -124,11 +124,12 @@ jobs:
               echo " current | $CUR_STMT | $CUR_BRANCH | $CUR_FUNCS | $CUR_LINES "
               echo '=========================================================='
               if [ ${CI_PULL_REQUEST} ]; then
+                GITHUB_APPS_TOKEN=$(cat /githubapps/githubapps_token)
                 coverage_report=$(echo "Hello World")
                 curl -X POST \
-                  -H 'Content-Type:application/json' \
-                  -u "${GITHUB_USERNAME}":"${GITHUB_APPS_TOKEN}" \
-                  -d "{\"body\":\"Hello World\"}" \
+                  -H "Accept: application/vnd.github+json" \
+                  -H "Authorization: Bearer ${GITHUB_APPS_TOKEN}"\
+                  -H "X-GitHub-Api-Version: 2022-11-28" \
                   "https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/pulls/${CIRCLE_PULL_REQUEST##*/}/comments"
               fi
             fi
