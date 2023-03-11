@@ -87,7 +87,7 @@ jobs:
                 coverage_report=echo "Hello World"
                 curl -X POST \
                   -H 'Content-Type:application/json' \
-                  -u ${GITHUB_USERNAME}:${GITHUB_APPS_TOKEN} \
+                  -u "${GITHUB_USERNAME}":"${GITHUB_APPS_TOKEN}" \
                   -d "{\"body\":\"${coverage_report}"}" \
                   "https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
               fi
