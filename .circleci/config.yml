@@ -84,7 +84,7 @@ jobs:
               echo " current | $CUR_STMT | $CUR_BRANCH | $CUR_FUNCS | $CUR_LINES "
               echo '=========================================================='
               if [ ${CI_PULL_REQUEST} ]; then
-                coverage_report=echo "Hello World"
+                coverage_report=$(echo "Hello World")
                 curl -X POST \
                   -H 'Content-Type:application/json' \
                   -u "${GITHUB_USERNAME}":"${GITHUB_APPS_TOKEN}" \
