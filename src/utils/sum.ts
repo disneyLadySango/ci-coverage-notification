@@ -5,11 +5,3 @@ export const sum = (a: number, b: number): number => {
 export const sums = (...args: number[]): number => {
   return args.reduce((prev, current) => prev + current, 0);
 };
-
-export const test = (...args: string[]): string => {
-  return args.join('');
-};
-
-export const tes2t = (...args: string[]): void => {
-  console.log(args);
-};
