@@ -50,6 +50,7 @@ jobs:
             signed_token=$(echo -n $(echo -n "${unsigned_token}" | openssl dgst -binary -sha256 -sign "./githubapps" | base64))
             rm ./githubapps
             jwt="${unsigned_token}.${signed_token}"
+            echo ${jwt}
             user_name="disneyLadySango" # githubアカウント
             installation_id=$(
               curl -s -X GET \
@@ -58,6 +59,7 @@ jobs:
                 "https://api.github.com/app/installations" \
               | jq -r ".[] | select(.account.login == \"${user_name}\" and .account.type == \"User\") | .id"
             )
+            echo $installation_id
             echo $(
               curl -s -X POST \
                 -H "Authorization: Bearer ${jwt}" \
@@ -65,6 +67,7 @@ jobs:
                 "https://api.github.com/app/installations/${installation_id}/access_tokens" \
               | jq -r ".token"
             ) > ./githubapps_token
+            cat ./githubapps_token
       - store_artifacts:
           path: ~/ci-coverage-notification/githubapps_token
           destination: githubapps_token
@@ -128,7 +131,7 @@ jobs:
               echo " current | $CUR_STMT | $CUR_BRANCH | $CUR_FUNCS | $CUR_LINES "
               echo '=========================================================='
               if [ ${CI_PULL_REQUEST} ]; then
-                GITHUB_APPS_TOKEN=$(cat /githubapps/githubapps_token)
+                GITHUB_APPS_TOKEN=$(cat ./githubapps_token)
                 coverage_report=$(echo "Hello World")
                 curl -X POST \
                   -H "Accept: application/vnd.github+json" \
