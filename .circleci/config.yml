@@ -30,6 +30,7 @@ jobs:
             - .
 
   create_token:
+    working_directory: ~/ci-coverage-notification
     executor:
       name: default
     steps:
@@ -130,6 +131,7 @@ jobs:
                   -H "Accept: application/vnd.github+json" \
                   -H "Authorization: Bearer ${GITHUB_APPS_TOKEN}"\
                   -H "X-GitHub-Api-Version: 2022-11-28" \
+                  -d "{\"body\":\"Hello World\"}" \
                   "https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/pulls/${CIRCLE_PULL_REQUEST##*/}/comments"
               fi
             fi
@@ -142,7 +144,9 @@ workflows:
   workflow:
     jobs:
       - initialization
-      - create_token
+      - create_token:
+          requires:
+            - initialization
       - test:
           requires:
             - initialization
