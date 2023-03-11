@@ -133,7 +133,7 @@ jobs:
               echo "https://api.github.com/repos/disneyLadySango/${CIRCLE_PROJECT_REPONAME}/issues/${CIRCLE_PULL_REQUEST##*/}/comments"
               if [ ${CI_PULL_REQUEST} ]; then
                 GITHUB_APPS_TOKEN=$(cat ./githubapps_token)
-                coverage_report=$(echo '## Coverage Report\n<br />\n|      | Stmts | Branch | Funcs | Lines |\n| ---- | ----- | ------ | ----- | ----- |\n| main | '"$MAIN_STMT"' | '"$MAIN_BRANCH"' | '"$MAIN_FUNCS"' | '"$MAIN_LINES"' |\n| current | '"$CUR_STMT"' | '"$CUR_BRANCH"' | '"$CUR_FUNCS"' | '"$CUR_LINES"' |')
+                coverage_report=$(echo '## Coverage Report\n<br />\n\n|      | Stmts | Branch | Funcs | Lines |\n| ---- | ----- | ------ | ----- | ----- |\n| main | '"$MAIN_STMT"' | '"$MAIN_BRANCH"' | '"$MAIN_FUNCS"' | '"$MAIN_LINES"$' |\n| current | '"$CUR_STMT"' | '"$CUR_BRANCH"' | '"$CUR_FUNCS"' | '"$CUR_LINES"' |')
                 echo $coverage_report
                 curl -X POST \
                   -H "Accept: application/vnd.github+json" \
